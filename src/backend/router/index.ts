@@ -1,23 +1,18 @@
-import { initTRPC } from '@trpc/server';
+import * as trpc from "@trpc/server";
 
-import { z } from 'zod';
+import { z } from "zod";
 
-export const t = initTRPC.create();
-
-export const appRouter = t.router({
-  hello: t.procedure
-    .input(
-      z
-        .object({
-          text: z.string().nullish(),
-        })
-        .nullish(),
-    )
-    .query(({ input }) => {
-      return {
-        greeting: `hello ${input?.text ?? 'world'}`,
-      };
-    }),
+export const appRouter = trpc.router().query("hello", {
+  input: z
+    .object({
+      text: z.string().nullish(),
+    })
+    .nullish(),
+  resolve({ input }) {
+    return {
+      greeting: `hello ${input?.text ?? "world"}`,
+    };
+  },
 });
 
 // export type definition of API
